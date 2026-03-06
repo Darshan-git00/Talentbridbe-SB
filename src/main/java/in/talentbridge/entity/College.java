@@ -1,5 +1,6 @@
 package in.talentbridge.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
@@ -26,9 +27,11 @@ public class College {
 
     private LocalDateTime createdAt;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "college")
     private List<Student> students;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "college")
     private List<Recruiter> recruiters;
 

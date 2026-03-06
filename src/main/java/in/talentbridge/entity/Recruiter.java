@@ -1,6 +1,7 @@
 package in.talentbridge.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
@@ -43,6 +44,7 @@ import java.util.List;
         @JoinColumn(name = "college_id")
         private College college;
 
+        @JsonIgnore
         @OneToMany(mappedBy = "recruiter")
         private List<Drive> drives;
 

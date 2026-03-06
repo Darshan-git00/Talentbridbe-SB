@@ -1,6 +1,7 @@
 package in.talentbridge.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 import java.time.LocalDateTime;
@@ -44,6 +45,16 @@ import java.util.List;
         private String linkedinProfile;
         private String portfolioUrl;
 
+        public int getPlatformScore() {
+            return PlatformScore;
+        }
+
+        public void setPlatformScore(int platformScore) {
+            PlatformScore = platformScore;
+        }
+
+        private int PlatformScore;
+
         // Scores derived from those profiles
         private int githubScore;
         private int hackerrankScore;
@@ -57,6 +68,7 @@ import java.util.List;
         @JoinColumn(name = "college_id")
         private College college;
 
+        @JsonIgnore
         @OneToMany(mappedBy = "student")
         private List<Application> applications;
 
