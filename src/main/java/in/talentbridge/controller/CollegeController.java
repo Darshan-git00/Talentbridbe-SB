@@ -1,7 +1,7 @@
 package in.talentbridge.controller;
 
-
-import in.talentbridge.entity.College;
+import in.talentbridge.dto.CollegeRequest;
+import in.talentbridge.dto.CollegeResponse;
 import in.talentbridge.service.CollegeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,25 +17,25 @@ public class CollegeController {
     private final CollegeService collegeService;
 
     @GetMapping
-    public ResponseEntity<List<College>> getAllColleges() {
+    public ResponseEntity<List<CollegeResponse>> getAllColleges() {
         return ResponseEntity.ok(collegeService.getAllColleges());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<College> getCollegeById(@PathVariable String id) {
+    public ResponseEntity<CollegeResponse> getCollegeById(@PathVariable String id) {
         return collegeService.getCollegeById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public ResponseEntity<College> createCollege(@RequestBody College college) {
-        return ResponseEntity.ok(collegeService.createCollege(college));
+    public ResponseEntity<CollegeResponse> createCollege(@RequestBody CollegeRequest request) {
+        return ResponseEntity.ok(collegeService.createCollege(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<College> updateCollege(@PathVariable String id, @RequestBody College college) {
-        return ResponseEntity.ok(collegeService.updateCollege(id, college));
+    public ResponseEntity<CollegeResponse> updateCollege(@PathVariable String id, @RequestBody CollegeRequest request) {
+        return ResponseEntity.ok(collegeService.updateCollege(id, request));
     }
 
     @DeleteMapping("/{id}")
@@ -44,12 +44,3 @@ public class CollegeController {
         return ResponseEntity.noContent().build();
     }
 }
-//```
-//
-//Now restart the app and test these endpoints in Postman:
-//        ```
-//GET    http://localhost:8080/api/colleges
-//GET    http://localhost:8080/api/colleges/{id}
-//POST   http://localhost:8080/api/colleges
-//PUT    http://localhost:8080/api/colleges/{id}
-//DELETE http://localhost:8080/api/colleges/{id}

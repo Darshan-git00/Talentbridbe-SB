@@ -1,6 +1,7 @@
 package in.talentbridge.controller;
 
-import in.talentbridge.entity.Recruiter;
+import in.talentbridge.dto.RecruiterRequest;
+import in.talentbridge.dto.RecruiterResponse;
 import in.talentbridge.service.RecruiterService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,30 +17,30 @@ public class RecruiterController {
     private final RecruiterService recruiterService;
 
     @GetMapping
-    public ResponseEntity<List<Recruiter>> getAllRecruiters() {
+    public ResponseEntity<List<RecruiterResponse>> getAllRecruiters() {
         return ResponseEntity.ok(recruiterService.getAllRecruiters());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Recruiter> getRecruiterById(@PathVariable String id) {
+    public ResponseEntity<RecruiterResponse> getRecruiterById(@PathVariable String id) {
         return recruiterService.getRecruiterById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/college/{collegeId}")
-    public ResponseEntity<List<Recruiter>> getRecruitersByCollege(@PathVariable String collegeId) {
+    public ResponseEntity<List<RecruiterResponse>> getRecruitersByCollege(@PathVariable String collegeId) {
         return ResponseEntity.ok(recruiterService.getRecruitersByCollege(collegeId));
     }
 
     @PostMapping
-    public ResponseEntity<Recruiter> createRecruiter(@RequestBody Recruiter recruiter) {
-        return ResponseEntity.ok(recruiterService.createRecruiter(recruiter));
+    public ResponseEntity<RecruiterResponse> createRecruiter(@RequestBody RecruiterRequest request) {
+        return ResponseEntity.ok(recruiterService.createRecruiter(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Recruiter> updateRecruiter(@PathVariable String id, @RequestBody Recruiter recruiter) {
-        return ResponseEntity.ok(recruiterService.updateRecruiter(id, recruiter));
+    public ResponseEntity<RecruiterResponse> updateRecruiter(@PathVariable String id, @RequestBody RecruiterRequest request) {
+        return ResponseEntity.ok(recruiterService.updateRecruiter(id, request));
     }
 
     @DeleteMapping("/{id}")

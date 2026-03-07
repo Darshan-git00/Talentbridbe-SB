@@ -1,6 +1,7 @@
 package in.talentbridge.controller;
 
-import in.talentbridge.entity.Drive;
+import in.talentbridge.dto.DriveRequest;
+import in.talentbridge.dto.DriveResponse;
 import in.talentbridge.service.DriveService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -16,40 +17,40 @@ public class DriveController {
     private final DriveService driveService;
 
     @GetMapping
-    public ResponseEntity<List<Drive>> getAllDrives() {
+    public ResponseEntity<List<DriveResponse>> getAllDrives() {
         return ResponseEntity.ok(driveService.getAllDrives());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Drive> getDriveById(@PathVariable String id) {
+    public ResponseEntity<DriveResponse> getDriveById(@PathVariable String id) {
         return driveService.getDriveById(id)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/college/{collegeId}")
-    public ResponseEntity<List<Drive>> getDrivesByCollege(@PathVariable String collegeId) {
+    public ResponseEntity<List<DriveResponse>> getDrivesByCollege(@PathVariable String collegeId) {
         return ResponseEntity.ok(driveService.getDrivesByCollege(collegeId));
     }
 
     @GetMapping("/recruiter/{recruiterId}")
-    public ResponseEntity<List<Drive>> getDrivesByRecruiter(@PathVariable String recruiterId) {
+    public ResponseEntity<List<DriveResponse>> getDrivesByRecruiter(@PathVariable String recruiterId) {
         return ResponseEntity.ok(driveService.getDrivesByRecruiter(recruiterId));
     }
 
     @GetMapping("/status/{status}")
-    public ResponseEntity<List<Drive>> getDrivesByStatus(@PathVariable String status) {
+    public ResponseEntity<List<DriveResponse>> getDrivesByStatus(@PathVariable String status) {
         return ResponseEntity.ok(driveService.getDrivesByStatus(status));
     }
 
     @PostMapping
-    public ResponseEntity<Drive> createDrive(@RequestBody Drive drive) {
-        return ResponseEntity.ok(driveService.createDrive(drive));
+    public ResponseEntity<DriveResponse> createDrive(@RequestBody DriveRequest request) {
+        return ResponseEntity.ok(driveService.createDrive(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Drive> updateDrive(@PathVariable String id, @RequestBody Drive drive) {
-        return ResponseEntity.ok(driveService.updateDrive(id, drive));
+    public ResponseEntity<DriveResponse> updateDrive(@PathVariable String id, @RequestBody DriveRequest request) {
+        return ResponseEntity.ok(driveService.updateDrive(id, request));
     }
 
     @DeleteMapping("/{id}")
