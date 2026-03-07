@@ -9,6 +9,7 @@ import in.talentbridge.mapper.EntityMapper;
 import in.talentbridge.repository.CollegeRepository;
 import in.talentbridge.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final CollegeRepository collegeRepository;
     private final EntityMapper entityMapper;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public List<StudentResponse> getAllStudents() {
         return studentRepository.findAll()
@@ -42,7 +44,7 @@ public class StudentService {
         Student student = new Student();
         student.setName(request.getName());
         student.setEmail(request.getEmail());
-        student.setPasswordHash(request.getPassword());
+        student.setPasswordHash(passwordEncoder.encode(request.getPassword()));
         student.setCourse(request.getCourse());
         student.setBranch(request.getBranch());
         student.setYear(request.getYear());

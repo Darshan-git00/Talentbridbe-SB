@@ -3,6 +3,7 @@ package in.talentbridge.controller;
 import in.talentbridge.dto.ApplicationRequest;
 import in.talentbridge.dto.ApplicationResponse;
 import in.talentbridge.service.ApplicationService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,7 +45,7 @@ public class ApplicationController {
     }
 
     @PostMapping
-    public ResponseEntity<ApplicationResponse> createApplication(@RequestBody ApplicationRequest request) {
+    public ResponseEntity<ApplicationResponse> createApplication(@Valid @RequestBody ApplicationRequest request) {
         return ResponseEntity.ok(applicationService.createApplication(request));
     }
 

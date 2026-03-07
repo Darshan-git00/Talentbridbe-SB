@@ -9,6 +9,7 @@ import in.talentbridge.mapper.EntityMapper;
 import in.talentbridge.repository.CollegeRepository;
 import in.talentbridge.repository.RecruiterRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,6 +23,7 @@ public class RecruiterService {
     private final RecruiterRepository recruiterRepository;
     private final CollegeRepository collegeRepository;
     private final EntityMapper entityMapper;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public List<RecruiterResponse> getAllRecruiters() {
         return recruiterRepository.findAll()
@@ -42,7 +44,7 @@ public class RecruiterService {
         Recruiter recruiter = new Recruiter();
         recruiter.setName(request.getName());
         recruiter.setEmail(request.getEmail());
-        recruiter.setPasswordHash(request.getPassword());
+        recruiter.setPasswordHash(passwordEncoder.encode(request.getPassword()));
         recruiter.setCompany(request.getCompany());
         recruiter.setDesignation(request.getDesignation());
         recruiter.setPhone(request.getPhone());

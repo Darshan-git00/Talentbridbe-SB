@@ -3,6 +3,7 @@ package in.talentbridge.controller;
 import in.talentbridge.dto.RecruiterRequest;
 import in.talentbridge.dto.RecruiterResponse;
 import in.talentbridge.service.RecruiterService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,12 +35,12 @@ public class RecruiterController {
     }
 
     @PostMapping
-    public ResponseEntity<RecruiterResponse> createRecruiter(@RequestBody RecruiterRequest request) {
+    public ResponseEntity<RecruiterResponse> createRecruiter(@Valid @RequestBody RecruiterRequest request) {
         return ResponseEntity.ok(recruiterService.createRecruiter(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<RecruiterResponse> updateRecruiter(@PathVariable String id, @RequestBody RecruiterRequest request) {
+    public ResponseEntity<RecruiterResponse> updateRecruiter(@PathVariable String id, @Valid @RequestBody RecruiterRequest request) {
         return ResponseEntity.ok(recruiterService.updateRecruiter(id, request));
     }
 

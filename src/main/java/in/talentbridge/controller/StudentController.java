@@ -3,6 +3,7 @@ package in.talentbridge.controller;
 import in.talentbridge.dto.StudentRequest;
 import in.talentbridge.dto.StudentResponse;
 import in.talentbridge.service.StudentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,12 +35,12 @@ public class StudentController {
     }
 
     @PostMapping
-    public ResponseEntity<StudentResponse> createStudent(@RequestBody StudentRequest request) {
+    public ResponseEntity<StudentResponse> createStudent(@Valid @RequestBody StudentRequest request) {
         return ResponseEntity.ok(studentService.createStudent(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<StudentResponse> updateStudent(@PathVariable String id, @RequestBody StudentRequest request) {
+    public ResponseEntity<StudentResponse> updateStudent(@PathVariable String id, @Valid @RequestBody StudentRequest request) {
         return ResponseEntity.ok(studentService.updateStudent(id, request));
     }
 

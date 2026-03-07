@@ -8,6 +8,7 @@ import in.talentbridge.exception.ResourceNotFoundException;
 import in.talentbridge.mapper.EntityMapper;
 import in.talentbridge.repository.CollegeRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class CollegeService {
 
     private final CollegeRepository collegeRepository;
     private final EntityMapper entityMapper;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public List<CollegeResponse> getAllColleges() {
         return collegeRepository.findAll()
@@ -40,7 +42,7 @@ public class CollegeService {
         College college = new College();
         college.setName(request.getName());
         college.setEmail(request.getEmail());
-        college.setPasswordHash(request.getPassword());
+        college.setPasswordHash(passwordEncoder.encode(request.getPassword()));
         college.setLocation(request.getLocation());
         return entityMapper.toCollegeResponse(collegeRepository.save(college));
     }

@@ -3,6 +3,7 @@ package in.talentbridge.controller;
 import in.talentbridge.dto.DriveRequest;
 import in.talentbridge.dto.DriveResponse;
 import in.talentbridge.service.DriveService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -44,12 +45,12 @@ public class DriveController {
     }
 
     @PostMapping
-    public ResponseEntity<DriveResponse> createDrive(@RequestBody DriveRequest request) {
+    public ResponseEntity<DriveResponse> createDrive(@Valid @RequestBody DriveRequest request) {
         return ResponseEntity.ok(driveService.createDrive(request));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DriveResponse> updateDrive(@PathVariable String id, @RequestBody DriveRequest request) {
+    public ResponseEntity<DriveResponse> updateDrive(@PathVariable String id, @Valid @RequestBody DriveRequest request) {
         return ResponseEntity.ok(driveService.updateDrive(id, request));
     }
 
