@@ -41,6 +41,7 @@ public class EntityMapper {
         response.setPlatformScore(student.getPlatformScore());
         response.setOverallScore(student.getOverallScore());
         response.setGithubScore(student.getGithubScore());
+        response.setResumeUrl(student.getResumeUrl());
         response.setCreatedAt(student.getCreatedAt() != null ? student.getCreatedAt().toString() : null);
         if (student.getCollege() != null) {
             response.setCollegeId(student.getCollege().getId());

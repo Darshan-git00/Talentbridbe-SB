@@ -112,6 +112,20 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<!--Cloudinary dependency-->
+		<dependency>
+			<groupId>com.cloudinary</groupId>
+			<artifactId>cloudinary-http45</artifactId>
+			<version>1.36.0</version>
+		</dependency>
+
+		<!--PDF Parsing dependency-->
+		<dependency>
+			<groupId>org.apache.pdfbox</groupId>
+			<artifactId>pdfbox</artifactId>
+			<version>3.0.1</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

@@ -3,14 +3,24 @@ package in.talentbridge.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import java.time.LocalDateTime;
 import java.util.List;
 
-    @Entity
-    @Table(name = "students")
-    @Data
+@Entity
+@Table(name = "students")
+@Getter
+@Setter
+@NoArgsConstructor
+@ToString
+@EqualsAndHashCode
     public class Student {
+
 
         @Id
         @GeneratedValue(strategy = GenerationType.UUID)
@@ -60,6 +70,7 @@ import java.util.List;
         private int hackerrankScore;
 
 
+
         // Overall computed score combining everything
         private int overallScore;
         private LocalDateTime createdAt;
@@ -67,6 +78,13 @@ import java.util.List;
         @ManyToOne
         @JoinColumn(name = "college_id")
         private College college;
+
+    @Column(name = "resume_url")
+    private String resumeUrl;
+
+        public void setresumeUrl(String resumeUrl) {
+            this.resumeUrl = resumeUrl;
+        }
 
         @JsonIgnore
         @OneToMany(mappedBy = "student")
@@ -77,4 +95,6 @@ import java.util.List;
             createdAt = LocalDateTime.now();
         }
 
-}
+        public void setResumeUrl(String resumeUrl) {
+        }
+    }

@@ -39,6 +39,7 @@ public class StudentRequest {
     private String linkedinProfile;
     private String portfolioUrl;
 
+
     @NotBlank(message = "College ID is required")
     private String collegeId;
 }

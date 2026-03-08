@@ -27,4 +27,5 @@ public class StudentResponse {
     private String collegeId;
     private String collegeName;
     private String createdAt;
+    private String resumeUrl;
 }
