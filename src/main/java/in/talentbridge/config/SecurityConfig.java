@@ -1,5 +1,6 @@
 package in.talentbridge.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import in.talentbridge.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -14,6 +15,7 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import java.util.List;
 
@@ -31,6 +33,16 @@ public class SecurityConfig {
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
+    }
+
+    @Bean
+    public WebClient.Builder webClientBuilder() {
+        return WebClient.builder();
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 
     @Bean
@@ -61,6 +73,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/applications/**").authenticated()
                         .requestMatchers("/api/resume/**").authenticated()
                         .requestMatchers("/api/github/**").authenticated()
+                        .requestMatchers("/api/ai/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

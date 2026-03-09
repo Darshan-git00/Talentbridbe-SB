@@ -2,6 +2,8 @@ package in.talentbridge.service;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import in.talentbridge.entity.Student;
 import in.talentbridge.exception.ResourceNotFoundException;
 import in.talentbridge.repository.StudentRepository;
@@ -24,16 +26,8 @@ public class ResumeService {
 
     private final Cloudinary cloudinary;
     private final StudentRepository studentRepository;
-
-    private static final List<String> KNOWN_SKILLS = List.of(
-            "java", "python", "javascript", "typescript", "react", "angular", "vue",
-            "spring", "spring boot", "node", "nodejs", "express", "django", "flask",
-            "sql", "mysql", "postgresql", "mongodb", "redis", "docker", "kubernetes",
-            "aws", "azure", "gcp", "git", "linux", "html", "css", "rest", "graphql",
-            "machine learning", "deep learning", "tensorflow", "pytorch", "pandas",
-            "numpy", "data science", "artificial intelligence", "c++", "c#", "kotlin",
-            "swift", "flutter", "android", "ios", "devops", "ci/cd", "jenkins"
-    );
+    private final GeminiService geminiService;
+    private final ObjectMapper objectMapper;
 
     public Map<String, Object> uploadAndParseResume(String studentId, MultipartFile file) throws IOException {
 
@@ -52,23 +46,23 @@ public class ResumeService {
         );
 
         String resumeUrl = (String) uploadResult.get("secure_url");
-        //System.out.println("Resume URL from Cloudinary: " + resumeUrl);
 
-        // Parse PDF text
+        // Extract text from PDF
         String resumeText = extractTextFromPdf(file);
-        List<String> extractedSkills = extractSkills(resumeText);
-        int resumeScore = calculateResumeScore(resumeText, extractedSkills);
 
+        // Use Gemini AI to analyze resume
+        Map<String, Object> aiAnalysis = analyzeResumeWithAI(resumeText);
+
+        List<String> extractedSkills = (List<String>) aiAnalysis.get("skills");
+        int resumeScore = (int) aiAnalysis.get("score");
+        String feedback = (String) aiAnalysis.get("feedback");
+        String summary = (String) aiAnalysis.get("summary");
+
+        // Calculate overall score
         int githubScore = student.getGithubScore();
-        int overallScore;
+        int overallScore = githubScore == 0 ? resumeScore : (resumeScore + githubScore) / 2;
 
-        if (githubScore == 0) {
-            overallScore = resumeScore;
-        } else {
-            overallScore = (resumeScore + githubScore) / 2;
-        }
-
-// Update query
+        // Save to DB
         studentRepository.updateResumeDetails(
                 studentId,
                 resumeUrl,
@@ -77,16 +71,79 @@ public class ResumeService {
                 overallScore
         );
 
-        // Verify from DB
-        Student fromDb = studentRepository.findById(studentId).orElseThrow();
-        //System.out.println("From DB - resumeUrl: " + fromDb.getResumeUrl());
-
         Map<String, Object> result = new HashMap<>();
         result.put("resumeUrl", resumeUrl);
         result.put("extractedSkills", extractedSkills);
         result.put("resumeScore", resumeScore);
-        result.put("message", "Resume uploaded and parsed successfully");
+        result.put("overallScore", overallScore);
+        result.put("feedback", feedback);
+        result.put("summary", summary);
+        result.put("message", "Resume analyzed by AI successfully");
         return result;
+    }
+
+    private Map<String, Object> analyzeResumeWithAI(String resumeText) {
+        String prompt = """
+                Analyze this resume and return ONLY a JSON object with no markdown, no explanation, just raw JSON.
+                
+                Resume text:
+                %s
+                
+                Return exactly this JSON structure:
+                {
+                    "skills": ["skill1", "skill2", "skill3"],
+                    "score": 85,
+                    "feedback": "2-3 sentences of specific improvement suggestions",
+                    "summary": "2 sentence professional summary of this candidate"
+                }
+                
+                Scoring criteria (out of 100):
+                - Skills breadth and relevance: 40 points
+                - Projects and experience: 25 points
+                - Education and certifications: 15 points
+                - Profile completeness (GitHub, LinkedIn, etc): 10 points
+                - Overall presentation: 10 points
+                
+                Extract ALL technical and soft skills mentioned.
+                Be honest and specific in feedback.
+                """.formatted(resumeText.substring(0, Math.min(resumeText.length(), 3000)));
+
+        try {
+            String response = geminiService.prompt(prompt);
+
+            // Clean response — remove markdown if present
+            String cleaned = response
+                    .replace("```json", "")
+                    .replace("```", "")
+                    .trim();
+
+            JsonNode json = objectMapper.readTree(cleaned);
+
+            List<String> skills = new ArrayList<>();
+            json.path("skills").forEach(s -> skills.add(s.asText()));
+
+            int score = json.path("score").asInt(50);
+            String feedback = json.path("feedback").asText("Keep improving your profile.");
+            String summary = json.path("summary").asText("");
+
+            Map<String, Object> result = new HashMap<>();
+            result.put("skills", skills);
+            result.put("score", Math.min(score, 100));
+            result.put("feedback", feedback);
+            result.put("summary", summary);
+            return result;
+
+        } catch (Exception e) {
+            System.out.println("AI Analysis error: " + e.getMessage());
+            e.printStackTrace();
+            // Fallback if AI fails
+            Map<String, Object> fallback = new HashMap<>();
+            fallback.put("skills", List.of());
+            fallback.put("score", 50);
+            fallback.put("feedback", "Resume uploaded successfully. AI analysis temporarily unavailable.");
+            fallback.put("summary", "");
+            return fallback;
+        }
     }
 
     private String extractTextFromPdf(MultipartFile file) throws IOException {
@@ -95,27 +152,5 @@ public class ResumeService {
         String text = stripper.getText(document);
         document.close();
         return text.toLowerCase();
-    }
-
-    private List<String> extractSkills(String resumeText) {
-        List<String> foundSkills = new ArrayList<>();
-        for (String skill : KNOWN_SKILLS) {
-            if (resumeText.contains(skill.toLowerCase())) {
-                foundSkills.add(skill);
-            }
-        }
-        return foundSkills;
-    }
-
-    private int calculateResumeScore(String resumeText, List<String> extractedSkills) {
-        int score = 0;
-        int skillPoints = Math.min(extractedSkills.size() * 4, 40);
-        score += skillPoints;
-        if (resumeText.contains("@")) score += 10;
-        if (resumeText.contains("github")) score += 10;
-        if (resumeText.contains("linkedin")) score += 10;
-        if (resumeText.contains("project")) score += 10;
-        if (resumeText.contains("experience") || resumeText.contains("internship")) score += 10;
-        return Math.min(score, 100);
     }
 }

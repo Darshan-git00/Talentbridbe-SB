@@ -112,6 +112,10 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+		</dependency>
 		<!--Cloudinary dependency-->
 		<dependency>
 			<groupId>com.cloudinary</groupId>
@@ -124,6 +128,12 @@
 			<groupId>org.apache.pdfbox</groupId>
 			<artifactId>pdfbox</artifactId>
 			<version>3.0.1</version>
+		</dependency>
+
+		<!--For gemini-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
 
 	</dependencies>
