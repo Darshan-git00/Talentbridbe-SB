@@ -3,6 +3,8 @@ package in.talentbridge.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
+
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -28,12 +30,16 @@ import java.util.List;
 
         // Eligibility criteria
         private double minSkillScore;
-        private String eligibleBranches; // store as comma separated
-        private String eligibleYears;
 
-        private LocalDateTime driveDate;
-        private LocalDateTime lastDateToApply;
-        private LocalDateTime createdAt;
+        @Column(columnDefinition = "text[]")
+        private String[] eligibleBranches; // store as comma separated
+
+        @Column(columnDefinition = "text[]")
+        private String[] eligibleYears;
+
+        private LocalDate driveDate;
+        private LocalDate lastDateToApply;
+        private LocalDate createdAt;
 
         @ManyToOne
         @JoinColumn(name = "recruiter_id")
@@ -49,7 +55,7 @@ import java.util.List;
 
         @PrePersist
         protected void onCreate() {
-            createdAt = LocalDateTime.now();
+            createdAt = LocalDate.now();
         }
 
 }

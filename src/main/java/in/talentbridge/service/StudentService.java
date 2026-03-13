@@ -2,6 +2,7 @@ package in.talentbridge.service;
 
 import in.talentbridge.dto.StudentRequest;
 import in.talentbridge.dto.StudentResponse;
+import in.talentbridge.dto.profile.ChangePasswordRequest;
 import in.talentbridge.entity.Student;
 import in.talentbridge.exception.DuplicateResourceException;
 import in.talentbridge.exception.ResourceNotFoundException;
@@ -11,6 +12,8 @@ import in.talentbridge.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import in.talentbridge.dto.profile.StudentProfileRequest;
+import in.talentbridge.dto.profile.ChangePasswordRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -101,5 +104,35 @@ public class StudentService {
                 .stream()
                 .map(entityMapper::toStudentResponse)
                 .collect(Collectors.toList());
+    }
+    public StudentResponse updateStudentProfile(String id, StudentProfileRequest request) {
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+
+        student.setName(request.getName());
+        if (request.getCourse() != null) student.setCourse(request.getCourse());
+        if (request.getBranch() != null) student.setBranch(request.getBranch());
+        if (request.getYear() != null) student.setYear(String.valueOf(request.getYear()));
+        if (request.getCgpa() != null) student.setCgpa(request.getCgpa());
+        if (request.getSkills() != null) student.setSkills(request.getSkills());
+        if (request.getCertifications() != null) student.setCertifications(request.getCertifications());
+        if (request.getGithubProfile() != null) student.setGithubProfile(request.getGithubProfile());
+        if (request.getHackerrankProfile() != null) student.setHackerrankProfile(request.getHackerrankProfile());
+        if (request.getLinkedinProfile() != null) student.setLinkedinProfile(request.getLinkedinProfile());
+        if (request.getPortfolioUrl() != null) student.setPortfolioUrl(request.getPortfolioUrl());
+
+        return entityMapper.toStudentResponse(studentRepository.save(student));
+    }
+
+    public void changeStudentPassword(String id, ChangePasswordRequest request) {
+        Student student = studentRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), student.getPasswordHash())) {
+            throw new RuntimeException("Current password is incorrect");
+        }
+
+        student.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
+        studentRepository.save(student);
     }
 }

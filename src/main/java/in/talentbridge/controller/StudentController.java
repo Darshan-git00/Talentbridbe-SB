@@ -7,6 +7,8 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import in.talentbridge.dto.profile.StudentProfileRequest;
+import in.talentbridge.dto.profile.ChangePasswordRequest;
 
 import java.util.List;
 
@@ -48,5 +50,19 @@ public class StudentController {
     public ResponseEntity<Void> deleteStudent(@PathVariable String id) {
         studentService.deleteStudent(id);
         return ResponseEntity.noContent().build();
+    }
+    @PatchMapping("/{id}/profile")
+    public ResponseEntity<StudentResponse> updateProfile(
+            @PathVariable String id,
+            @Valid @RequestBody StudentProfileRequest request) {
+        return ResponseEntity.ok(studentService.updateStudentProfile(id, request));
+    }
+
+    @PatchMapping("/{id}/password")
+    public ResponseEntity<Void> changePassword(
+            @PathVariable String id,
+            @Valid @RequestBody ChangePasswordRequest request) {
+        studentService.changeStudentPassword(id, request);
+        return ResponseEntity.ok().build();
     }
 }

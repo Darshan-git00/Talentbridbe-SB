@@ -2,6 +2,8 @@ package in.talentbridge.controller;
 
 import in.talentbridge.dto.CollegeRequest;
 import in.talentbridge.dto.CollegeResponse;
+import in.talentbridge.dto.profile.ChangePasswordRequest;
+import in.talentbridge.dto.profile.CollegeProfileRequest;
 import in.talentbridge.service.CollegeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,5 +45,19 @@ public class CollegeController {
     public ResponseEntity<Void> deleteCollege(@PathVariable String id) {
         collegeService.deleteCollege(id);
         return ResponseEntity.noContent().build();
+    }
+    @PatchMapping("/{id}/profile")
+    public ResponseEntity<CollegeResponse> updateProfile(
+            @PathVariable String id,
+            @Valid @RequestBody CollegeProfileRequest request) {
+        return ResponseEntity.ok(collegeService.updateCollegeProfile(id, request));
+    }
+
+    @PatchMapping("/{id}/password")
+    public ResponseEntity<Void> changePassword(
+            @PathVariable String id,
+            @Valid @RequestBody ChangePasswordRequest request) {
+        collegeService.changeCollegePassword(id, request);
+        return ResponseEntity.ok().build();
     }
 }

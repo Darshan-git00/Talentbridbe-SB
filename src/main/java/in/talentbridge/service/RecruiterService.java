@@ -2,6 +2,7 @@ package in.talentbridge.service;
 
 import in.talentbridge.dto.RecruiterRequest;
 import in.talentbridge.dto.RecruiterResponse;
+import in.talentbridge.dto.profile.RecruiterProfileRequest;
 import in.talentbridge.entity.Recruiter;
 import in.talentbridge.exception.DuplicateResourceException;
 import in.talentbridge.exception.ResourceNotFoundException;
@@ -11,6 +12,8 @@ import in.talentbridge.repository.RecruiterRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import in.talentbridge.dto.profile.RecruiterProfileRequest;
+import in.talentbridge.dto.profile.ChangePasswordRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +27,8 @@ public class RecruiterService {
     private final CollegeRepository collegeRepository;
     private final EntityMapper entityMapper;
     private final BCryptPasswordEncoder passwordEncoder;
+
+
 
     public List<RecruiterResponse> getAllRecruiters() {
         return recruiterRepository.findAll()
@@ -92,5 +97,32 @@ public class RecruiterService {
                 .stream()
                 .map(entityMapper::toRecruiterResponse)
                 .collect(Collectors.toList());
+    }
+    public RecruiterResponse updateRecruiterProfile(String id, RecruiterProfileRequest request) {
+        Recruiter recruiter = recruiterRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Recruiter not found"));
+
+        recruiter.setName(request.getName());
+        if (request.getCompany() != null) recruiter.setCompany(request.getCompany());
+        if (request.getDesignation() != null) recruiter.setDesignation(request.getDesignation());
+        if (request.getPhone() != null) recruiter.setPhone(request.getPhone());
+        if (request.getCompanyWebsite() != null) recruiter.setCompanyWebsite(request.getCompanyWebsite());
+        if (request.getCompanyLocation() != null) recruiter.setCompanyLocation(request.getCompanyLocation());
+        if (request.getIndustry() != null) recruiter.setIndustry(request.getIndustry());
+        if (request.getLinkedinProfile() != null) recruiter.setLinkedinProfile(request.getLinkedinProfile());
+
+        return entityMapper.toRecruiterResponse(recruiterRepository.save(recruiter));
+    }
+
+    public void changeRecruiterPassword(String id, ChangePasswordRequest request) {
+        Recruiter recruiter = recruiterRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Recruiter not found"));
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), recruiter.getPasswordHash())) {
+            throw new RuntimeException("Current password is incorrect");
+        }
+
+        recruiter.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
+        recruiterRepository.save(recruiter);
     }
 }

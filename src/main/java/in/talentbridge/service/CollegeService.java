@@ -10,6 +10,8 @@ import in.talentbridge.repository.CollegeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import in.talentbridge.dto.profile.CollegeProfileRequest;
+import in.talentbridge.dto.profile.ChangePasswordRequest;
 
 import java.util.List;
 import java.util.Optional;
@@ -58,5 +60,27 @@ public class CollegeService {
 
     public void deleteCollege(String id) {
         collegeRepository.deleteById(id);
+    }
+
+    public CollegeResponse updateCollegeProfile(String id, CollegeProfileRequest request) {
+        College college = collegeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("College not found"));
+
+        college.setName(request.getName());
+        if (request.getLocation() != null) college.setLocation(request.getLocation());
+
+        return entityMapper.toCollegeResponse(collegeRepository.save(college));
+    }
+
+    public void changeCollegePassword(String id, ChangePasswordRequest request) {
+        College college = collegeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("College not found"));
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), college.getPasswordHash())) {
+            throw new RuntimeException("Current password is incorrect");
+        }
+
+        college.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
+        collegeRepository.save(college);
     }
 }

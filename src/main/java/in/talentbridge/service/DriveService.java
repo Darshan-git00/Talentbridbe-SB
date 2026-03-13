@@ -3,6 +3,8 @@ package in.talentbridge.service;
 import in.talentbridge.dto.DriveRequest;
 import in.talentbridge.dto.DriveResponse;
 import in.talentbridge.entity.Drive;
+import in.talentbridge.entity.Recruiter;
+import in.talentbridge.exception.ResourceNotFoundException;
 import in.talentbridge.mapper.EntityMapper;
 import in.talentbridge.repository.CollegeRepository;
 import in.talentbridge.repository.DriveRepository;
@@ -35,7 +37,10 @@ public class DriveService {
                 .map(entityMapper::toDriveResponse);
     }
 
-    public DriveResponse createDrive(DriveRequest request) {
+    public DriveResponse createDrive(DriveRequest request, String email) {
+        Recruiter recruiter = recruiterRepository.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("Recruiter not found"));
+
         Drive drive = new Drive();
         drive.setPosition(request.getPosition());
         drive.setDescription(request.getDescription());
@@ -43,22 +48,14 @@ public class DriveService {
         drive.setSalary(request.getSalary());
         drive.setLocation(request.getLocation());
         drive.setDriveType(request.getDriveType());
-        drive.setStatus(request.getStatus());
+        drive.setStatus(request.getStatus() != null ? request.getStatus() : "ACTIVE");
         drive.setMinSkillScore(request.getMinSkillScore());
         drive.setEligibleBranches(request.getEligibleBranches());
         drive.setEligibleYears(request.getEligibleYears());
         drive.setDriveDate(request.getDriveDate());
         drive.setLastDateToApply(request.getLastDateToApply());
-
-        if (request.getRecruiterId() != null) {
-            recruiterRepository.findById(request.getRecruiterId())
-                    .ifPresent(drive::setRecruiter);
-        }
-
-        if (request.getCollegeId() != null) {
-            collegeRepository.findById(request.getCollegeId())
-                    .ifPresent(drive::setCollege);
-        }
+        drive.setRecruiter(recruiter);
+        drive.setCollege(recruiter.getCollege());
 
         return entityMapper.toDriveResponse(driveRepository.save(drive));
     }

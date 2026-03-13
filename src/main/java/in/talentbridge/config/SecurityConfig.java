@@ -2,6 +2,7 @@ package in.talentbridge.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import in.talentbridge.security.JwtAuthenticationFilter;
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -66,9 +67,24 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
+
+                        // College list — public (for signup dropdown)
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/colleges").permitAll()
+
+                        // College-specific sub-routes accessible by all roles
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/colleges/{id}").hasAnyRole("COLLEGE", "STUDENT", "RECRUITER")
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/students/college/**").hasAnyRole("COLLEGE", "STUDENT", "RECRUITER")
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/recruiters/college/**").hasAnyRole("COLLEGE", "STUDENT", "RECRUITER")
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/drives/college/**").hasAnyRole("COLLEGE", "STUDENT", "RECRUITER")
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/applications/drive/**").hasAnyRole("COLLEGE", "RECRUITER")
+                        .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/applications/student/**").hasAnyRole("COLLEGE", "STUDENT")
+
+                        // Role-specific full access
                         .requestMatchers("/api/colleges/**").hasRole("COLLEGE")
-                        .requestMatchers("/api/recruiters/**").hasRole("RECRUITER")
-                        .requestMatchers("/api/students/**").hasRole("STUDENT")
+                        .requestMatchers("/api/recruiters/**").hasAnyRole("RECRUITER", "COLLEGE")
+                        .requestMatchers("/api/students/**").hasAnyRole("STUDENT", "COLLEGE")
+
+                        // Shared authenticated routes
                         .requestMatchers("/api/drives/**").authenticated()
                         .requestMatchers("/api/applications/**").authenticated()
                         .requestMatchers("/api/resume/**").authenticated()

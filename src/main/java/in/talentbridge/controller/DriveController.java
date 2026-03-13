@@ -6,6 +6,8 @@ import in.talentbridge.service.DriveService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -45,8 +47,10 @@ public class DriveController {
     }
 
     @PostMapping
-    public ResponseEntity<DriveResponse> createDrive(@Valid @RequestBody DriveRequest request) {
-        return ResponseEntity.ok(driveService.createDrive(request));
+    public ResponseEntity<DriveResponse> createDrive(
+            @Valid @RequestBody DriveRequest request,
+            @AuthenticationPrincipal String email) {
+        return ResponseEntity.ok(driveService.createDrive(request, email));
     }
 
     @PutMapping("/{id}")
