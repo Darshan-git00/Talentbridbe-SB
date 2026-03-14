@@ -94,6 +94,7 @@ public class EntityMapper {
             response.setRecruiterId(drive.getRecruiter().getId());
             response.setRecruiterName(drive.getRecruiter().getName());
             response.setCompany(drive.getRecruiter().getCompany());
+            response.setRecruiter(toRecruiterResponse(drive.getRecruiter()));
         }
         if (drive.getCollege() != null) {
             response.setCollegeId(drive.getCollege().getId());
@@ -116,6 +117,7 @@ public class EntityMapper {
             response.setStudentId(application.getStudent().getId());
             response.setStudentName(application.getStudent().getName());
             response.setStudentEmail(application.getStudent().getEmail());
+            response.setStudent(toStudentResponse(application.getStudent()));
         }
         if (application.getDrive() != null) {
             response.setDriveId(application.getDrive().getId());
@@ -123,7 +125,9 @@ public class EntityMapper {
             if (application.getDrive().getRecruiter() != null) {
                 response.setCompany(application.getDrive().getRecruiter().getCompany());
             }
+            response.setDrive(toDriveResponse(application.getDrive()));
         }
+
         return response;
     }
 }

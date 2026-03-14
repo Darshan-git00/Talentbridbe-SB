@@ -26,4 +26,5 @@ public class DriveResponse {
     private String collegeId;
     private String collegeName;
     private LocalDate createdAt;
+    private RecruiterResponse recruiter;
 }

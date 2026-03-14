@@ -13,7 +13,7 @@ public class ApplicationResponse {
     private LocalDateTime appliedDate;
     private LocalDateTime updatedAt;
 
-    // Student details
+    // Keep flat fields for backward compat
     private String studentId;
     private String studentName;
     private String studentEmail;
@@ -22,4 +22,8 @@ public class ApplicationResponse {
     private String driveId;
     private String position;
     private String company;
+
+    // ADD THIS — nested student object for frontend
+    private StudentResponse student;
+    private DriveResponse drive;
 }
