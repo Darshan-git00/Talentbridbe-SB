@@ -35,6 +35,12 @@ public class College {
     @OneToMany(mappedBy = "college")
     private List<Recruiter> recruiters;
 
+    @Column(name = "password_reset_token")
+    private String passwordResetToken;
+
+    @Column(name = "password_reset_token_expiry")
+    private LocalDateTime passwordResetTokenExpiry;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

@@ -33,4 +33,6 @@ public interface StudentRepository extends JpaRepository<Student, String> {
             @Param("githubScore") int githubScore,
             @Param("overallScore") int overallScore
     );
+
+    Optional<Student> findByPasswordResetToken(String token);
 }

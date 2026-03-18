@@ -6,4 +6,5 @@ import java.util.Optional;
 
 public interface CollegeRepository extends JpaRepository<College, String> {
     Optional<College> findByEmail(String email);
+    Optional<College> findByPasswordResetToken(String token);
 }

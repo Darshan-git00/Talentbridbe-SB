@@ -83,4 +83,5 @@ public class CollegeService {
         college.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
         collegeRepository.save(college);
     }
+
 }

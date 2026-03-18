@@ -95,6 +95,12 @@ import java.util.List;
             createdAt = LocalDateTime.now();
         }
 
+        @Column(name = "password_reset_token")
+        private String passwordResetToken;
+
+        @Column(name = "password_reset_token_expiry")
+        private LocalDateTime passwordResetTokenExpiry;
+
         public void setResumeUrl(String resumeUrl) {
         }
     }

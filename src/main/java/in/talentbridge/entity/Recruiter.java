@@ -48,6 +48,12 @@ import java.util.List;
         @OneToMany(mappedBy = "recruiter")
         private List<Drive> drives;
 
+        @Column(name = "password_reset_token")
+        private String passwordResetToken;
+
+        @Column(name = "password_reset_token_expiry")
+        private LocalDateTime passwordResetTokenExpiry;
+
         @PrePersist
         protected void onCreate() {
             createdAt = LocalDateTime.now();
