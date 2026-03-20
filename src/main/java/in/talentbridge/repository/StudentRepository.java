@@ -17,7 +17,7 @@ public interface StudentRepository extends JpaRepository<Student, String> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE Student s SET s.resumeUrl = :resumeUrl, s.skills = :skills, s.PlatformScore = :platformScore WHERE s.id = :studentId")
+    @Query("UPDATE Student s SET s.resumeUrl = :resumeUrl, s.skills = :skills, s.platformScore = :platformScore WHERE s.id = :studentId")
     void updateResumeDetails(
             @Param("studentId") String studentId,
             @Param("resumeUrl") String resumeUrl,
@@ -32,6 +32,21 @@ public interface StudentRepository extends JpaRepository<Student, String> {
             @Param("studentId") String studentId,
             @Param("githubScore") int githubScore,
             @Param("overallScore") int overallScore
+    );
+
+    @Modifying
+    @Transactional
+    @Query("""
+        UPDATE Student s
+        SET s.platformScore = :platformScore,
+            s.competitiveProgrammingScore = :platformScore,
+            s.overallScore = :overallScore
+        WHERE s.id = :studentId
+        """)
+    void updatePlatformDetails(
+            @Param("studentId")     String studentId,
+            @Param("platformScore") int    platformScore,
+            @Param("overallScore")  int    overallScore
     );
 
     Optional<Student> findByPasswordResetToken(String token);

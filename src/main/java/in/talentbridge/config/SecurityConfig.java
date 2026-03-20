@@ -90,6 +90,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/resume/**").authenticated()
                         .requestMatchers("/api/github/**").authenticated()
                         .requestMatchers("/api/ai/**").authenticated()
+                        .requestMatchers("/api/platform/score/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
