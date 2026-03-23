@@ -19,4 +19,5 @@ public class StudentProfileRequest {
     private String hackerrankProfile;
     private String linkedinProfile;
     private String portfolioUrl;
+    private String competitiveProgrammingProfile;
 }

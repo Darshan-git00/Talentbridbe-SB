@@ -56,7 +56,6 @@ public class StudentService {
         student.setCertifications(request.getCertifications());
         student.setStatus(request.getStatus());
         student.setGithubProfile(request.getGithubProfile());
-        student.setHackerrankProfile(request.getHackerrankProfile());
         student.setLinkedinProfile(request.getLinkedinProfile());
         student.setPortfolioUrl(request.getPortfolioUrl());
 
@@ -82,7 +81,6 @@ public class StudentService {
             student.setCertifications(request.getCertifications());
             student.setStatus(request.getStatus());
             student.setGithubProfile(request.getGithubProfile());
-            student.setHackerrankProfile(request.getHackerrankProfile());
             student.setLinkedinProfile(request.getLinkedinProfile());
             student.setPortfolioUrl(request.getPortfolioUrl());
 
@@ -117,7 +115,7 @@ public class StudentService {
         if (request.getSkills() != null) student.setSkills(request.getSkills());
         if (request.getCertifications() != null) student.setCertifications(request.getCertifications());
         if (request.getGithubProfile() != null) student.setGithubProfile(request.getGithubProfile());
-        if (request.getHackerrankProfile() != null) student.setHackerrankProfile(request.getHackerrankProfile());
+        if (request.getCompetitiveProgrammingProfile() != null) student.setCompetitiveProgrammingProfile(request.getCompetitiveProgrammingProfile());
         if (request.getLinkedinProfile() != null) student.setLinkedinProfile(request.getLinkedinProfile());
         if (request.getPortfolioUrl() != null) student.setPortfolioUrl(request.getPortfolioUrl());
 

@@ -76,9 +76,9 @@ public class AuthService {
         student.setCertifications(request.getCertifications());
         student.setStatus("ACTIVE");
         student.setGithubProfile(request.getGithubProfile());
-        student.setHackerrankProfile(request.getHackerrankProfile());
+        student.setCompetitiveProgrammingProfile(request.getCompetitiveProgrammingProfile());
         student.setLinkedinProfile(request.getLinkedinProfile());
-        student.setPortfolioUrl(request.getPortfolioUrl());
+        student.setPortfolioUrl(request.getPortfolioUrl());     
 
         if (request.getCollegeId() != null) {
             collegeRepository.findById(request.getCollegeId())
@@ -159,4 +159,6 @@ public class AuthService {
             default -> throw new IllegalArgumentException("Invalid role");
         }
     }
+
+
 }

@@ -15,7 +15,6 @@ public class StudentResponse {
     private String[] certifications;
     private String status;
     private String githubProfile;
-    private String hackerrankProfile;
     private String linkedinProfile;
     private String portfolioUrl;
     private int aiInterviewScore;
@@ -28,4 +27,5 @@ public class StudentResponse {
     private String collegeName;
     private String createdAt;
     private String resumeUrl;
+    private String competitiveProgrammingProfile;
 }

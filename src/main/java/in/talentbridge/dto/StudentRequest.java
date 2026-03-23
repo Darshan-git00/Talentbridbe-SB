@@ -35,9 +35,9 @@ public class StudentRequest {
     private String[] certifications;
     private String status;
     private String githubProfile;
-    private String hackerrankProfile;
     private String linkedinProfile;
     private String portfolioUrl;
+    private String competitiveProgrammingProfile;
 
 
     @NotBlank(message = "College ID is required")

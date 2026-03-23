@@ -16,6 +16,8 @@ public class CompetitiveProgrammingController {
 
     private final CompetitiveProgrammingService cpService;
 
+
+
     /**
      * GET /api/platform/score/{studentId}
      *

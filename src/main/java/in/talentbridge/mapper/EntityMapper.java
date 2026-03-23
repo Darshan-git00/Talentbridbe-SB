@@ -32,7 +32,6 @@ public class EntityMapper {
         response.setCertifications(student.getCertifications());
         response.setStatus(student.getStatus());
         response.setGithubProfile(student.getGithubProfile());
-        response.setHackerrankProfile(student.getHackerrankProfile());
         response.setLinkedinProfile(student.getLinkedinProfile());
         response.setPortfolioUrl(student.getPortfolioUrl());
         response.setAiInterviewScore(student.getAiInterviewScore());

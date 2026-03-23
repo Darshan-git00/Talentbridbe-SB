@@ -44,7 +44,6 @@ public class Student {
 
     // External profiles
     private String githubProfile;
-    private String hackerrankProfile;          // keep for backwards compat
     private String linkedinProfile;
     private String portfolioUrl;
 

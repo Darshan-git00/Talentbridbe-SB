@@ -2,7 +2,6 @@ package in.talentbridge.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import in.talentbridge.security.JwtAuthenticationFilter;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -31,6 +30,7 @@ public class SecurityConfig {
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public RestTemplate restTemplate() {
         return new RestTemplate();
@@ -68,6 +68,9 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**").permitAll()
 
+                        // ── NEW: permit Google OAuth endpoints ──────────────────
+                        .requestMatchers("/api/auth/oauth2/**").permitAll()
+
                         // College list — public (for signup dropdown)
                         .requestMatchers(org.springframework.http.HttpMethod.GET, "/api/colleges").permitAll()
 
@@ -94,6 +97,7 @@ public class SecurityConfig {
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
 }
