@@ -2,12 +2,12 @@ package in.talentbridge.controller;
 
 import in.talentbridge.dto.DriveRequest;
 import in.talentbridge.dto.DriveResponse;
+import in.talentbridge.dto.EligibleDriveResponse;
 import in.talentbridge.service.DriveService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.annotation.CurrentSecurityContext;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -46,6 +46,22 @@ public class DriveController {
         return ResponseEntity.ok(driveService.getDrivesByStatus(status));
     }
 
+    /**
+     * NEW — Smart eligibility endpoint.
+     * Returns all active drives for the student's college,
+     * sorted eligible-first, each annotated with:
+     *   eligible: true/false
+     *   ineligibilityReasons: ["Branch not eligible...", "Need 10 more skill points..."]
+     *
+     * Filtering is by branch + year + skill score ONLY.
+     * No CGPA — TalentBridge is skill-first.
+     */
+    @GetMapping("/eligible/{studentId}")
+    public ResponseEntity<List<EligibleDriveResponse>> getEligibleDrives(
+            @PathVariable String studentId) {
+        return ResponseEntity.ok(driveService.getEligibleDrives(studentId));
+    }
+
     @PostMapping
     public ResponseEntity<DriveResponse> createDrive(
             @Valid @RequestBody DriveRequest request,
@@ -54,7 +70,9 @@ public class DriveController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DriveResponse> updateDrive(@PathVariable String id, @Valid @RequestBody DriveRequest request) {
+    public ResponseEntity<DriveResponse> updateDrive(
+            @PathVariable String id,
+            @Valid @RequestBody DriveRequest request) {
         return ResponseEntity.ok(driveService.updateDrive(id, request));
     }
 

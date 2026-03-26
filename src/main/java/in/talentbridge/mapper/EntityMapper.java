@@ -3,6 +3,7 @@ package in.talentbridge.mapper;
 import in.talentbridge.dto.*;
 import in.talentbridge.entity.*;
 import org.springframework.stereotype.Component;
+import java.util.List;
 
 @Component
 public class EntityMapper {
@@ -128,5 +129,41 @@ public class EntityMapper {
         }
 
         return response;
+    }
+
+    public EligibleDriveResponse toEligibleDriveResponse(
+            Drive drive,
+            boolean eligible,
+            List<String> ineligibilityReasons) {
+
+        EligibleDriveResponse r = new EligibleDriveResponse();
+        r.setId(drive.getId());
+        r.setPosition(drive.getPosition());
+        r.setDescription(drive.getDescription());
+        r.setOpenings(drive.getOpenings());
+        r.setSalary(drive.getSalary());
+        r.setLocation(drive.getLocation());
+        r.setDriveType(drive.getDriveType());
+        r.setStatus(drive.getStatus());
+        r.setMinSkillScore(drive.getMinSkillScore());
+        r.setEligibleBranches(drive.getEligibleBranches());
+        r.setEligibleYears(drive.getEligibleYears());
+        r.setDriveDate(drive.getDriveDate());
+        r.setLastDateToApply(drive.getLastDateToApply());
+        r.setCreatedAt(drive.getCreatedAt());
+        r.setEligible(eligible);
+        r.setIneligibilityReasons(ineligibilityReasons);
+
+        if (drive.getRecruiter() != null) {
+            EligibleDriveResponse.RecruiterInfo ri = new EligibleDriveResponse.RecruiterInfo();
+            ri.setId(drive.getRecruiter().getId());
+            ri.setName(drive.getRecruiter().getName());
+            ri.setCompany(drive.getRecruiter().getCompany());
+            ri.setEmail(drive.getRecruiter().getEmail());
+            ri.setDesignation(drive.getRecruiter().getDesignation());
+            r.setRecruiter(ri);
+        }
+
+        return r;
     }
 }

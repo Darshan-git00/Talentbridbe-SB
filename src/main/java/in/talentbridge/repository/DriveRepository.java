@@ -8,4 +8,5 @@ public interface DriveRepository extends JpaRepository<Drive, String> {
     List<Drive> findByStatus(String status);
     List<Drive> findByCollegeId(String collegeId);
     List<Drive> findByRecruiterId(String recruiterId);
+    List<Drive> findByCollegeIdAndStatus(String collegeId, String status);
 }
